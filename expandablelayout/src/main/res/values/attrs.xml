@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ExpandableTextView">
+        <!--最大行数-->
+        <attr name="maxCollapsedLines" format="integer" />
+        <!--动画时间-->
+        <attr name="animDuration" format="integer" />
+        <!--动画alpha值-->
+        <attr name="animAlphaStart" format="float" />
+    </declare-styleable>
+
+</resources>

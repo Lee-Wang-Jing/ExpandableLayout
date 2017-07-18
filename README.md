@@ -1,4 +1,4 @@
-# Expandablelayout [![](https://ci.novoda.com/buildStatus/icon?job=bintray-release)](https://ci.novoda.com/job/bintray-release/lastBuild/console) [![Download](https://api.bintray.com/packages/wangjinggm/maven/recyclerview-drag/images/download.svg) ](https://bintray.com/wangjinggm/maven/recyclerview-drag/_latestVersion) [![license](http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](https://github.com/Lee-Wang-Jing/ViewpagerMoreTabDemo/blob/master/LICENSE) 
+# Expandablelayout [![](https://ci.novoda.com/buildStatus/icon?job=bintray-release)](https://ci.novoda.com/job/bintray-release/lastBuild/console) [![Download](https://api.bintray.com/packages/wangjinggm/maven/expandablelayout/images/download.svg) ](https://bintray.com/wangjinggm/maven/expandablelayout/_latestVersion) [![license](http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](https://github.com/Lee-Wang-Jing/ExpandableLayout/blob/master/LICENSE) 
 
 技术交流群：598627802，加群前请务必阅读[群行为规范](https://github.com/Lee-Wang-Jing/GroupStandard)     
 有问题或者某种需求欢迎加群或者提issues，Thanks
@@ -12,14 +12,14 @@
 # Dependencies
 * Gradle
 ```groovy
-compile 'com.wangjing:recyclerview-drag:1.0.4'
+compile 'com.wangjing:expandablelayout:1.0.1'
 ```
 * Maven
 ```xml
 <dependency>
   <groupId>com.wangjing</groupId>
-  <artifactId>recyclerview-drag</artifactId>
-  <version>1.0.4</version>
+  <artifactId>expandablelayout</artifactId>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```

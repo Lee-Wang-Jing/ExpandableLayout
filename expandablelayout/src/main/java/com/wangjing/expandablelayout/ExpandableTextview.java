@@ -235,6 +235,10 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         requestLayout();
     }
 
+    public void setOnExpandStateChangeListener(@Nullable OnExpandStateChangeListener listener) {
+        mListener = listener;
+    }
+
     /**
      * 获取textview高度
      *

@@ -8,6 +8,10 @@
         <attr name="animDuration" format="integer" />
         <!--动画alpha值-->
         <attr name="animAlphaStart" format="float" />
+        <!--收起时显示的文案-->
+        <attr name="collapsedText" format="string" />
+        <!--展开时显示的文案-->
+        <attr name="expandText" format="string" />
     </declare-styleable>
 
 </resources>

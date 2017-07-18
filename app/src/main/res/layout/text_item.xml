@@ -39,6 +39,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:layout_gravity="right|bottom"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimary"
             android:background="@android:color/transparent"/>
     </com.wangjing.expandablelayout.ExpandableTextview>
 

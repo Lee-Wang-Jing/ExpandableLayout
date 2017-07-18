@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'//添加
 
 android {
     compileSdkVersion 26
@@ -22,4 +23,24 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.0.0-beta2'
+}
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options{
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
+    }
+}
+
+//添加
+publish {
+    userOrg = 'wangjinggm'//bintray.com用户名
+    groupId = 'com.wangjing'//jcenter上的路径
+    artifactId = 'expandablelayout'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'expandablelayout'//描述，不重要
+    website = 'https://github.com/Lee-Wang-Jing/ExpandableLayout'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

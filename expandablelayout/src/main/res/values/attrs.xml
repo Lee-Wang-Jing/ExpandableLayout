@@ -6,11 +6,11 @@
         <attr name="maxCollapsedLines" format="integer" />
         <!--动画时间-->
         <attr name="animDuration" format="integer" />
-        <!--动画alpha值-->
+        <!--动画alpha值，默认0.7f-->
         <attr name="animAlphaStart" format="float" />
-        <!--收起时显示的文案-->
+        <!--展开时显示的文案，默认收起-->
         <attr name="collapsedText" format="string" />
-        <!--展开时显示的文案-->
+        <!--收起时显示的文案，默认展开-->
         <attr name="expandText" format="string" />
     </declare-styleable>
 

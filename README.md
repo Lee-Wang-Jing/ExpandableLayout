@@ -42,7 +42,7 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
            expandableTextView:collapsedText="收起"
            expandableTextView:expandText="展开"
            expandableTextView:animDuration="300"
-           expandableTextView:animAlphaStart="0.9"
+           expandableTextView:animAlphaStart="1"
            expandableTextView:maxCollapsedLines="4">
    
            <TextView
@@ -76,16 +76,17 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
         <attr name="maxCollapsedLines" format="integer" />
         <!--动画时间-->
         <attr name="animDuration" format="integer" />
-        <!--动画alpha值-->
+        <!--动画alpha值，默认0.7f-->
         <attr name="animAlphaStart" format="float" />
-        <!--收起时显示的文案-->
+        <!--展开时显示的文案，默认收起-->
         <attr name="collapsedText" format="string" />
-        <!--展开时显示的文案-->
+        <!--收起时显示的文案，默认展开-->
         <attr name="expandText" format="string" />
     </declare-styleable>
 
 </resources>
 ```
+
 ## 使用方法
 
 * 在普通Layout中的使用 

@@ -23,7 +23,7 @@
         expandableTextView:collapsedText="收起"
         expandableTextView:expandText="展开"
         expandableTextView:animDuration="300"
-        expandableTextView:animAlphaStart="0.9"
+        expandableTextView:animAlphaStart="1"
         expandableTextView:maxCollapsedLines="4">
 
         <TextView

@@ -95,7 +95,7 @@ ExpandableTextview expTv1 = (ExpandableTextview) rootView.findViewById(R.id.samp
                     .findViewById(R.id.expand_text_view);
 expTv1.setText(getString(R.string.dummy_text1));
 ```
-* 在ListView、GridView或者RecyclerView等多个复用View中的使用 
+* 在ListView、GridView或者RecyclerView等多个复用View中的使用     
 初始化SparseBooleanArray
 ```java
   private final SparseBooleanArray mCollapsedStatus;

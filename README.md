@@ -12,14 +12,14 @@
 # Dependencies
 * Gradle
 ```groovy
-compile 'com.wangjing:expandablelayout:1.0.1'
+compile 'com.wangjing:expandablelayout:1.0.2'
 ```
 * Maven
 ```xml
 <dependency>
   <groupId>com.wangjing</groupId>
   <artifactId>expandablelayout</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <type>pom</type>
 </dependency>
 ```
@@ -35,144 +35,93 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
 ## xml中引用
 在xml中引用SwipeRecyclerView：
 ```xml
-    <com.wangjing.recyclerview_drag.DragRecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <com.wangjing.expandablelayout.ExpandableTextview
+           android:id="@+id/expand_text_view"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           expandableTextView:collapsedText="收起"
+           expandableTextView:expandText="展开"
+           expandableTextView:animDuration="300"
+           expandableTextView:animAlphaStart="0.9"
+           expandableTextView:maxCollapsedLines="4">
+   
+           <TextView
+               android:id="@+id/expandable_text"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
+               android:layout_marginTop="8dp"
+               android:fontFamily="sans-serif-light"
+               android:textColor="#666666"
+               android:textSize="16sp" />
+   
+           <TextView
+               android:id="@+id/expand_collapse"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right|bottom"
+               android:background="@android:color/transparent"
+               android:padding="16dp"
+               android:textColor="@color/colorPrimary"
+               android:textSize="16sp" />
+       </com.wangjing.expandablelayout.ExpandableTextview>
 ```
-## 使用拖拽和侧滑删除功能
-拖拽和侧滑删除的功能默认关闭的，所以先要打开功能：
+## 支持自定义的参数
+```xml
+<resources>
+
+    <declare-styleable name="ExpandableTextView">
+        <!--最大行数-->
+        <attr name="maxCollapsedLines" format="integer" />
+        <!--动画时间-->
+        <attr name="animDuration" format="integer" />
+        <!--动画alpha值-->
+        <attr name="animAlphaStart" format="float" />
+        <!--收起时显示的文案-->
+        <attr name="collapsedText" format="string" />
+        <!--展开时显示的文案-->
+        <attr name="expandText" format="string" />
+    </declare-styleable>
+
+</resources>
+```
+## 使用方法
+
+* 在普通Layout中的使用 
 ```java
-swipeRecyclerView.setLongPressDragEnabled(true); // 开启拖拽。
+ExpandableTextview expTv1 = (ExpandableTextview) rootView.findViewById(R.id.sample1)
+                    .findViewById(R.id.expand_text_view);
+expTv1.setText(getString(R.string.dummy_text1));
 ```
-然后用户就可以长按拖拽`Item`和侧滑删除`Item`了，我们可以监听用户的操作：
+* 在ListView、GridView或者RecyclerView等多个复用View中的使用 
+初始化SparseBooleanArray
+```java
+  private final SparseBooleanArray mCollapsedStatus;
+  public SampleTextListAdapter(Context context) {
+        mContext  = context;
+        mCollapsedStatus = new SparseBooleanArray();
+  }
+```
+   
+```java
+ viewHolder.expandableTextView.setText(sampleStrings[position], mCollapsedStatus, position);
+```
+此处需要使用expandableTextView中含有三个参数的setText方法     
+因为需要记录每个position的展开收起状态，否则会混乱
+
+* 设置展开收起的监听：
 ```java
 // 设置操作监听。
-swipeRecyclerView.setOnItemMoveListener(onItemMoveListener);// 监听拖拽，更新UI。
-
-OnItemMoveListener onItemMoveListener = new OnItemMoveListener() {
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        // Item被拖拽时，交换数据，并更新adapter。
-        Collections.swap(mDataList, fromPosition, toPosition);
-        adapter.notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
-
-    @Override
-    public void onItemDismiss(int position) {
-        // Item被侧滑删除时，删除数据，并更新adapter。
-        mDataList.remove(position);
-        adapter.notifyItemRemoved(position);
-    }
-};
+           ExpandableTextview expTv1 = (ExpandableTextview) rootView.findViewById(R.id.sample1)
+                    .findViewById(R.id.expand_text_view);
+            expTv1.setOnExpandStateChangeListener(new ExpandableTextview.OnExpandStateChangeListener() {
+                @Override
+                public void onExpandStateChanged(TextView textView, boolean isExpanded) {
+                    Toast.makeText(getActivity(), isExpanded ? "Expanded" : "Collapsed", Toast.LENGTH_SHORT).show();
+                }
+            });
 ```
-
-**使用`Grid`形式的`RecyclerView`拖拽`Item`时特别注意，因为`Grid`的`Item`可以跨`position`拖拽，所以`onItemMove()`方法体有所不同：**
-```java
-@Override
-public boolean onItemMove(int fromPosition, int toPosition) {
-    if (fromPosition < toPosition)
-        for (int i = fromPosition; i < toPosition; i++)
-            Collections.swap(mDataList, i, i + 1);
-    else
-        for (int i = fromPosition; i > toPosition; i--)
-            Collections.swap(mDataList, i, i - 1);
-
-    mMenuAdapter.notifyItemMoved(fromPosition, toPosition);
-    return true;
-}
-```
-我们还可以监听用户的侧滑删除和拖拽Item时的手指状态：
-```java
-/**
- * Item的拖拽/侧滑删除时，手指状态发生变化监听。
- */
-private OnItemStateChangedListener stateChangedListener = (viewHolder, actionState) -> {
-    if (actionState == OnItemStateChangedListener.ACTION_STATE_DRAG) {
-        // 状态：正在拖拽。
-    } else if (actionState == OnItemStateChangedListener.ACTION_STATE_SWIPE) {
-        // 状态：滑动删除。
-    } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
-        // 状态：手指松开。
-    }
-};
-```
-## 触摸拖拽 & 触摸侧滑删除
-想用户触摸到某个`Item`的`View`时就开始拖拽实现也很简单。  
-
-* 触摸拖拽
-```java
-swipeRecyclerView.startDrag(ViewHolder);
-```
-这里只要传入当前触摸`Item`对应的`ViewHolder`即可立即开始拖拽。
-
-* 设置某个position不能拖拽
-添加监听
-```java
-  recyclerview.setOnItemMovementListener(onItemMovementListener);
-```
-```java
-   /**
-       * 当Item被移动之前。
-       */
-      public static OnItemMovementListener onItemMovementListener = new OnItemMovementListener() {
-          /**
-           * 当Item在移动之前，获取拖拽的方向。
-           * @param recyclerView     {@link RecyclerView}.
-           * @param targetViewHolder target ViewHolder.
-           * @return
-           */
-          @Override
-          public int onDragFlags(RecyclerView recyclerView, RecyclerView.ViewHolder targetViewHolder) {
-              // 我们让第一个不能拖拽。
-              if (targetViewHolder.getAdapterPosition() == 0) {
-                  return OnItemMovementListener.INVALID;// 返回无效的方向。
-              }
-  
-              RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-  //            if (layoutManager instanceof LinearLayoutManager) {// 如果是LinearLayoutManager。
-  //                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-  //                if (linearLayoutManager.getOrientation() == LinearLayoutManager.HORIZONTAL) {// 横向的List。
-  //                    return (OnItemMovementListener.LEFT | OnItemMovementListener.RIGHT); // 只能左右拖拽。
-  //                } else {// 竖向的List。
-  //                    return OnItemMovementListener.UP | OnItemMovementListener.DOWN; // 只能上下拖拽。
-  //                }
-  //            }
-  //            else
-              if (layoutManager instanceof GridLayoutManager) {// 如果是Grid。
-                  return OnItemMovementListener.LEFT | OnItemMovementListener.RIGHT | OnItemMovementListener.UP |
-                          OnItemMovementListener.DOWN; // 可以上下左右拖拽。
-              }
-              return OnItemMovementListener.INVALID;// 返回无效的方向。
-          }
-  
-          @Override
-          public int onSwipeFlags(RecyclerView recyclerView, RecyclerView.ViewHolder targetViewHolder) {
-  //            // 我们让第一个不能滑动删除。
-  //            if (targetViewHolder.getAdapterPosition() == 0) {
-  //                return OnItemMovementListener.INVALID;// 返回无效的方向。
-  //            }
-  //
-  //            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-  //            if (layoutManager instanceof LinearLayoutManager) {// 如果是LinearLayoutManager
-  //                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-  //                if (linearLayoutManager.getOrientation() == LinearLayoutManager.HORIZONTAL) {// 横向的List。
-  //                    return OnItemMovementListener.UP | OnItemMovementListener.DOWN; // 只能上下滑动删除。
-  //                } else {// 竖向的List。
-  //                    return OnItemMovementListener.LEFT | OnItemMovementListener.RIGHT; // 只能左右滑动删除。
-  //                }
-  //            }
-              return OnItemMovementListener.INVALID;// 其它均返回无效的方向。
-          }
-      };
-```
-这里可以设置某个position不能拖拽或者滑动删除(Features版本支持)
-
-
-# Thanks
-* [SwipeMenu](https://github.com/TUBB/SwipeMenu/)
-* [SwipeRecyclerView](https://github.com/yanzhenjie/SwipeRecyclerView)
 
 # License
 ```text

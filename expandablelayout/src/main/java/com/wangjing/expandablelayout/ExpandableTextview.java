@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,7 +72,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         /**
          * Called when the expand/collapse animation has been finished
          *
-         * @param textView - TextView being expanded/collapsed
+         * @param textView   - TextView being expanded/collapsed
          * @param isExpanded - true if the TextView has been expanded
          */
         void onExpandStateChanged(TextView textView, boolean isExpanded);
@@ -102,8 +103,10 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
             collapsedText = DEFAULT_COLLAPSEDTEXT;
         }
         if (TextUtils.isEmpty(expandText)) {
-            collapsedText = DEFAULT_EXPANDTEXT;
+            expandText = DEFAULT_EXPANDTEXT;
         }
+        Log.e("init", "collapsedText==>" + collapsedText);
+        Log.e("init", "expandText==>" + expandText);
         setOrientation(VERTICAL);
         setVisibility(GONE);
     }
@@ -125,6 +128,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         mTv = (TextView) findViewById(R.id.expandable_text);
 //        mTv.setOnClickListener(this);
         mExpandTv = (TextView) findViewById(R.id.expand_collapse);
+        mExpandTv.setText(mCollapsed ? expandText : collapsedText);
         mExpandTv.setOnClickListener(this);
     }
 
@@ -144,9 +148,9 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         //标记动画正在进行
         mAnimating = true;
         Animation animation;
-        if (mCollapsed){
+        if (mCollapsed) {
             animation = new ExpandCollapseAnimation(this, getHeight(), mCollapsedHeight);
-        }else{
+        } else {
             animation = new ExpandCollapseAnimation(this, getHeight(), getHeight() +
                     mTextHeightWithMaxLines - mTv.getHeight());
         }
@@ -156,6 +160,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
             public void onAnimationStart(Animation animation) {
                 applyAlphaAnimation(mTv, mAnimAlphaStart);
             }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 // clear animation here to avoid repeated applyTransformation() calls
@@ -168,8 +173,10 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
                     mListener.onExpandStateChanged(mTv, !mCollapsed);
                 }
             }
+
             @Override
-            public void onAnimationRepeat(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
 
         clearAnimation();
@@ -192,6 +199,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //如果行数小于等于收起状态显示最大行数,则return
         if (mTv.getLineCount() <= mMaxCollapsedLines) {
+            Log.e("onMeasure", "没有展开");
             return;
         }
         //以下是行数大于最大行数的
@@ -200,7 +208,8 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         if (mCollapsed) {//如果是收起的
             mTv.setMaxLines(mMaxCollapsedLines);
         }
-        mExpandTv.setVisibility(VISIBLE);
+        Log.e("onMeasure", "有展开");
+        mExpandTv.setVisibility(View.VISIBLE);
         //计算宽高
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (mCollapsed) {
@@ -216,6 +225,13 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         }
     }
 
+    @Nullable
+    public CharSequence getText() {
+        if (mTv == null) {
+            return "";
+        }
+        return mTv.getText();
+    }
 
     public void setText(@Nullable CharSequence text) {
         mRelayout = true;
@@ -266,7 +282,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
 
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
-            final int newHeight = (int)((mEndHeight - mStartHeight) * interpolatedTime + mStartHeight);
+            final int newHeight = (int) ((mEndHeight - mStartHeight) * interpolatedTime + mStartHeight);
             mTv.setMaxHeight(newHeight - mMarginBetweenTxtAndBottom);
             if (Float.compare(mAnimAlphaStart, 1.0f) != 0) {
                 applyAlphaAnimation(mTv, mAnimAlphaStart + interpolatedTime * (1.0f - mAnimAlphaStart));
@@ -276,12 +292,12 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         }
 
         @Override
-        public void initialize( int width, int height, int parentWidth, int parentHeight ) {
+        public void initialize(int width, int height, int parentWidth, int parentHeight) {
             super.initialize(width, height, parentWidth, parentHeight);
         }
 
         @Override
-        public boolean willChangeBounds( ) {
+        public boolean willChangeBounds() {
             return true;
         }
     }

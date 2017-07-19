@@ -2,9 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -20,28 +20,32 @@
         android:id="@+id/expand_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        expandableTextView:collapsedText="收起"
+        expandableTextView:expandText="展开"
+        expandableTextView:animDuration="300"
+        expandableTextView:animAlphaStart="0.9"
         expandableTextView:maxCollapsedLines="4">
 
         <TextView
-            android:id="@id/expandable_text"
+            android:id="@+id/expandable_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-light"
-            android:textSize="16sp"
-            android:textColor="#666666" />
+            android:textColor="#666666"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@id/expand_collapse"
+            android:id="@+id/expand_collapse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:layout_gravity="right|bottom"
-            android:textSize="16sp"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
             android:textColor="@color/colorPrimary"
-            android:background="@android:color/transparent"/>
+            android:textSize="16sp" />
     </com.wangjing.expandablelayout.ExpandableTextview>
 
 </LinearLayout>

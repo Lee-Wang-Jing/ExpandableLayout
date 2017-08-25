@@ -12,6 +12,11 @@
         <attr name="collapsedText" format="string" />
         <!--收起时显示的文案，默认展开-->
         <attr name="expandText" format="string" />
+
+        <!--展开时显示的图片，默认收起-->
+        <attr name="collapsedDrawable" format="reference" />
+        <!--收起时显示的图片，默认展开-->
+        <attr name="expandDrawable" format="reference" />
     </declare-styleable>
 
 </resources>

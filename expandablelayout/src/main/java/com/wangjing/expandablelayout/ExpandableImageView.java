@@ -3,12 +3,13 @@ package com.wangjing.expandablelayout;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,8 +17,10 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 
 /**
  * 作者：Created by WangJing on 2017/7/17.
@@ -26,7 +29,7 @@ import android.widget.TextView;
  * 最近修改：2017/7/17 15:26 by WangJing
  */
 
-public class ExpandableTextview extends LinearLayout implements View.OnClickListener {
+public class ExpandableImageView extends LinearLayout implements View.OnClickListener {
 
     //默认的收起状态显示最多的行数
     private static final int MAX_COLLAPSED_LINES = 8;
@@ -34,14 +37,15 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     private static final int DEFAULT_ANIM_DURATION = 300;
     //动画开始时默认的alpha值
     private static final float DEFAULT_ANIM_ALPHA_START = 0.7f;
-    private static final String DEFAULT_COLLAPSEDTEXT = "收起";
-    private static final String DEFAULT_EXPANDTEXT = "展开";
+//    private static final String DEFAULT_COLLAPSEDTEXT = "收起";
+//    private static final String DEFAULT_EXPANDTEXT = "展开";
 
     private int mMaxCollapsedLines;
     private int mAnimationDuration;
     private float mAnimAlphaStart;
-    private String collapsedText;
-    private String expandText;
+
+    private Drawable mCollapseDrawable;
+    private Drawable mExpandDrawable;
 
     //是否正在执行动画
     private boolean mAnimating;
@@ -49,7 +53,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     private boolean mRelayout;
 
     protected TextView mTv;
-    protected TextView mExpandTv;
+    protected ImageView mExpandIv;
 
 
     //最大高度
@@ -78,15 +82,15 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         void onExpandStateChanged(TextView textView, boolean isExpanded);
     }
 
-    public ExpandableTextview(Context context) {
+    public ExpandableImageView(Context context) {
         this(context, null);
     }
 
-    public ExpandableTextview(Context context, @Nullable AttributeSet attrs) {
+    public ExpandableImageView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ExpandableTextview(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ExpandableImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -96,14 +100,14 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         mMaxCollapsedLines = typedArray.getInt(R.styleable.ExpandableTextView_maxCollapsedLines, MAX_COLLAPSED_LINES);
         mAnimationDuration = typedArray.getInt(R.styleable.ExpandableTextView_animDuration, DEFAULT_ANIM_DURATION);
         mAnimAlphaStart = typedArray.getFloat(R.styleable.ExpandableTextView_animAlphaStart, DEFAULT_ANIM_ALPHA_START);
-        collapsedText = typedArray.getString(R.styleable.ExpandableTextView_collapsedText);
-        expandText = typedArray.getString(R.styleable.ExpandableTextView_expandText);
+        mCollapseDrawable = typedArray.getDrawable(R.styleable.ExpandableTextView_collapsedDrawable);
+        mExpandDrawable = typedArray.getDrawable(R.styleable.ExpandableTextView_expandDrawable);
         typedArray.recycle();
-        if (TextUtils.isEmpty(collapsedText)) {
-            collapsedText = DEFAULT_COLLAPSEDTEXT;
+        if (mCollapseDrawable == null) {
+            mCollapseDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.ic_expand_less_black_12dp);
         }
-        if (TextUtils.isEmpty(expandText)) {
-            expandText = DEFAULT_EXPANDTEXT;
+        if (mExpandDrawable == null) {
+            mExpandDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.ic_expand_more_black_12dp);
         }
         setOrientation(VERTICAL);
         setVisibility(GONE);
@@ -125,19 +129,19 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     private void findViews() {
         mTv = findViewById(R.id.expandable_text);
 //        mTv.setOnClickListener(this);
-        mExpandTv = findViewById(R.id.expand_collapse);
-        mExpandTv.setText(mCollapsed ? expandText : collapsedText);
-        mExpandTv.setOnClickListener(this);
+        mExpandIv = findViewById(R.id.expand_collapse);
+        mExpandIv.setImageDrawable(mCollapsed ? mExpandDrawable : mCollapseDrawable);
+        mExpandIv.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (mExpandTv.getVisibility() != VISIBLE) {
+        if (mExpandIv.getVisibility() != VISIBLE) {
             return;
         }
         //设置展开状态
         mCollapsed = !mCollapsed;
-        mExpandTv.setText(mCollapsed ? expandText : collapsedText);
+        mExpandIv.setImageDrawable(mCollapsed ? mExpandDrawable : mCollapseDrawable);
 
         //在Listview中使用的时候需要保存状态
         if (mCollapsedStatus != null) {
@@ -191,7 +195,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         mRelayout = false;
         //有几种情况
         //1.没有展开按钮
-        mExpandTv.setVisibility(GONE);
+        mExpandIv.setVisibility(GONE);
         mTv.setMaxLines(Integer.MAX_VALUE);
         //计算宽高
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -205,7 +209,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         if (mCollapsed) {//如果是收起的
             mTv.setMaxLines(mMaxCollapsedLines);
         }
-        mExpandTv.setVisibility(View.VISIBLE);
+        mExpandIv.setVisibility(View.VISIBLE);
         //计算宽高
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (mCollapsed) {
@@ -241,7 +245,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         boolean isCollapsed = collapsedStatus.get(position, true);
         clearAnimation();
         mCollapsed = isCollapsed;
-        mExpandTv.setText(mCollapsed ? expandText : collapsedText);
+        mExpandIv.setImageDrawable(mCollapsed ? mExpandDrawable : mCollapseDrawable);
         setText(text);
         getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         requestLayout();

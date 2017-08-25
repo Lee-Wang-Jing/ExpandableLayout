@@ -20,6 +20,8 @@
         android:id="@+id/expand_imageview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        expandableTextView:collapsedDrawable="@mipmap/ic_launcher"
+        expandableTextView:expandDrawable="@mipmap/ic_launcher"
         expandableTextView:animAlphaStart="1"
         expandableTextView:animDuration="300"
         expandableTextView:maxCollapsedLines="4">

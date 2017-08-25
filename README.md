@@ -67,6 +67,37 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
                android:textSize="16sp" />
        </com.wangjing.expandablelayout.ExpandableTextview>
 ```
+//支持设置展开收起为图片
+```xml
+     <com.wangjing.expandablelayout.ExpandableImageView
+            android:id="@+id/expand_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            expandableTextView:collapsedDrawable="@mipmap/ic_launcher"
+            expandableTextView:expandDrawable="@mipmap/ic_launcher"
+            expandableTextView:animAlphaStart="1"
+            expandableTextView:animDuration="300"
+            expandableTextView:maxCollapsedLines="4">
+    
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#666666"
+                android:textSize="16sp" />
+    
+            <ImageView
+                android:id="@+id/expand_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:padding="16dp" />
+        </com.wangjing.expandablelayout.ExpandableImageView>
+```
 ## 支持自定义的参数
 ```xml
 <resources>
@@ -82,6 +113,11 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
         <attr name="collapsedText" format="string" />
         <!--收起时显示的文案，默认展开-->
         <attr name="expandText" format="string" />
+        
+         <!--展开时显示的图片，默认显示黑色箭头-->
+         <attr name="collapsedDrawable" format="reference" />
+         <!--收起时显示的图片，默认显示黑色箭头-->
+         <attr name="expandDrawable" format="reference" />
     </declare-styleable>
 
 </resources>
@@ -93,6 +129,10 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
 ```java
 ExpandableTextview expTv1 = (ExpandableTextview) rootView.findViewById(R.id.sample1)
                     .findViewById(R.id.expand_text_view);
+expTv1.setText(getString(R.string.dummy_text1));
+
+ ExpandableImageView expTv1 =  rootView.findViewById(R.id.sample1)
+                    .findViewById(R.id.expand_imageview);
 expTv1.setText(getString(R.string.dummy_text1));
 ```
 * 在ListView、GridView或者RecyclerView等多个复用View中的使用     
@@ -116,12 +156,25 @@ expTv1.setText(getString(R.string.dummy_text1));
 // 设置操作监听。
            ExpandableTextview expTv1 = (ExpandableTextview) rootView.findViewById(R.id.sample1)
                     .findViewById(R.id.expand_text_view);
-            expTv1.setOnExpandStateChangeListener(new ExpandableTextview.OnExpandStateChangeListener() {
+
+           expTv1.setOnExpandStateChangeListener(new ExpandableTextview.OnExpandStateChangeListener() {
                 @Override
                 public void onExpandStateChanged(TextView textView, boolean isExpanded) {
                     Toast.makeText(getActivity(), isExpanded ? "Expanded" : "Collapsed", Toast.LENGTH_SHORT).show();
                 }
             });
+//或者
+           ExpandableImageView expTv1 = (ExpandableImageView) rootView.findViewById(R.id.sample1)
+                    .findViewById(R.id.expand_text_view);
+           
+           expTv1.setOnExpandStateChangeListener(new ExpandableImageView.OnExpandStateChangeListener() {
+                           @Override
+                           public void onExpandStateChanged(TextView textView, boolean isExpanded) {
+                               Toast.makeText(getActivity(), isExpanded ? "Expanded" : "Collapsed", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+ 
+
 ```
 
 # License

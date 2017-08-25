@@ -12,7 +12,7 @@
 # Dependencies
 * Gradle
 ```groovy
-compile 'com.wangjing:expandablelayout:1.0.2'
+compile 'com.wangjing:expandablelayout:1.0.3'
 ```
 * Maven
 ```xml

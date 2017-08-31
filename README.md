@@ -12,7 +12,7 @@
 # Dependencies
 * Gradle
 ```groovy
-compile 'com.wangjing:expandablelayout:1.0.3'
+compile 'com.wangjing:expandablelayout:1.0.4'
 ```
 * Maven
 ```xml
@@ -118,6 +118,8 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
          <attr name="collapsedDrawable" format="reference" />
          <!--收起时显示的图片，默认显示黑色箭头-->
          <attr name="expandDrawable" format="reference" />
+         <!--内容文字区域点击是否可以展开收起，默认false，不可以-->
+         <attr name="contentClick" format="boolean" />
     </declare-styleable>
 
 </resources>

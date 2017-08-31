@@ -24,6 +24,7 @@
         expandableTextView:expandDrawable="@mipmap/ic_launcher"
         expandableTextView:animAlphaStart="1"
         expandableTextView:animDuration="300"
+        expandableTextView:contentClick="false"
         expandableTextView:maxCollapsedLines="4">
 
         <TextView

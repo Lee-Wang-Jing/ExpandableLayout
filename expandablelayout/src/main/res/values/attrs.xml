@@ -17,6 +17,8 @@
         <attr name="collapsedDrawable" format="reference" />
         <!--收起时显示的图片，默认显示黑色箭头-->
         <attr name="expandDrawable" format="reference" />
+        <!--内容文字区域点击是否可以展开收起，默认false，不可以-->
+        <attr name="contentClick" format="boolean" />
     </declare-styleable>
 
 </resources>

@@ -56,6 +56,8 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     private int mTextHeightWithMaxLines;
     //默认是收起的
     private boolean mCollapsed = true;
+    //内容文字区域点击是否可以展开收起，默认false
+    private boolean contentClick = false;
     //收起状态的高度
     private int mCollapsedHeight;
 
@@ -98,6 +100,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         mAnimAlphaStart = typedArray.getFloat(R.styleable.ExpandableTextView_animAlphaStart, DEFAULT_ANIM_ALPHA_START);
         collapsedText = typedArray.getString(R.styleable.ExpandableTextView_collapsedText);
         expandText = typedArray.getString(R.styleable.ExpandableTextView_expandText);
+        contentClick = typedArray.getBoolean(R.styleable.ExpandableTextView_contentClick, false);
         typedArray.recycle();
         if (TextUtils.isEmpty(collapsedText)) {
             collapsedText = DEFAULT_COLLAPSEDTEXT;
@@ -128,6 +131,9 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         mExpandTv = findViewById(R.id.expand_collapse);
         mExpandTv.setText(mCollapsed ? expandText : collapsedText);
         mExpandTv.setOnClickListener(this);
+        if (contentClick) {
+            mTv.setOnClickListener(this);
+        }
     }
 
     @Override

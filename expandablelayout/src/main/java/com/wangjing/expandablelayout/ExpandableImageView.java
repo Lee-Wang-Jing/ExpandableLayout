@@ -60,6 +60,8 @@ public class ExpandableImageView extends LinearLayout implements View.OnClickLis
     private int mTextHeightWithMaxLines;
     //默认是收起的
     private boolean mCollapsed = true;
+    //内容文字区域点击是否可以展开收起，默认false
+    private boolean contentClick = false;
     //收起状态的高度
     private int mCollapsedHeight;
 
@@ -102,6 +104,7 @@ public class ExpandableImageView extends LinearLayout implements View.OnClickLis
         mAnimAlphaStart = typedArray.getFloat(R.styleable.ExpandableTextView_animAlphaStart, DEFAULT_ANIM_ALPHA_START);
         mCollapseDrawable = typedArray.getDrawable(R.styleable.ExpandableTextView_collapsedDrawable);
         mExpandDrawable = typedArray.getDrawable(R.styleable.ExpandableTextView_expandDrawable);
+        contentClick = typedArray.getBoolean(R.styleable.ExpandableTextView_contentClick, false);
         typedArray.recycle();
         if (mCollapseDrawable == null) {
             mCollapseDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.ic_expand_less_black_12dp);
@@ -132,6 +135,9 @@ public class ExpandableImageView extends LinearLayout implements View.OnClickLis
         mExpandIv = findViewById(R.id.expand_collapse);
         mExpandIv.setImageDrawable(mCollapsed ? mExpandDrawable : mCollapseDrawable);
         mExpandIv.setOnClickListener(this);
+        if (contentClick) {
+            mTv.setOnClickListener(this);
+        }
     }
 
     @Override

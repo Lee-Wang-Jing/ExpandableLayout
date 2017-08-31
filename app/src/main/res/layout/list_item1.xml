@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         expandableTextView:animAlphaStart="1"
+        expandableTextView:contentClick="true"
         expandableTextView:maxCollapsedLines="4">
 
         <TextView

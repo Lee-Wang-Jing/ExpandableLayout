@@ -21,14 +21,14 @@ allprojects {
 ```
 	
 ```groovy
-implementation 'com.github.Lee-Wang-Jing:ExpandableLayout:1.0.5'
+implementation 'com.github.Lee-Wang-Jing:ExpandableLayout:1.0.6'
 ```
 * Maven
 ```xml
 <dependency>
 	    <groupId>com.github.Lee-Wang-Jing</groupId>
 	    <artifactId>ExpandableLayout</artifactId>
-	    <version>Tag</version>
+	    <version>1.0.6</version>
 </dependency>
 ```
 

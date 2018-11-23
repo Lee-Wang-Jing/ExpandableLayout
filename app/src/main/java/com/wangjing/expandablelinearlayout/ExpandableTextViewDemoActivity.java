@@ -126,6 +126,7 @@ public class ExpandableTextViewDemoActivity extends AppCompatActivity {
             });
 
             expTv1.setText(getString(R.string.dummy_text1));
+            expTv1.setShowCollapsed(false);
             expTv2.setText(getString(R.string.dummy_text2));
 
             return rootView;

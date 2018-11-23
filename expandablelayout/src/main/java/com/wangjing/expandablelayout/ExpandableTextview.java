@@ -51,6 +51,9 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     protected TextView mExpandTv;
 
 
+    //是否显示展开收起按钮
+    private boolean isShowCollapsed = true;
+
     //最大高度
     private int mTextHeightWithMaxLines;
     //默认是收起的
@@ -125,6 +128,14 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     }
 
 
+    public boolean isShowCollapsed() {
+        return isShowCollapsed;
+    }
+
+    public void setShowCollapsed(boolean showCollapsed) {
+        isShowCollapsed = showCollapsed;
+    }
+
     private void findViews() {
         mTv = findViewById(R.id.expandable_text);
 //        mTv.setOnClickListener(this);
@@ -195,35 +206,42 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
             return;
         }
         mRelayout = false;
-        //有几种情况
-        //1.没有展开按钮
-        mExpandTv.setVisibility(GONE);
-        mTv.setMaxLines(Integer.MAX_VALUE);
-        //计算宽高
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //如果行数小于等于收起状态显示最大行数,则return
-        if (mTv.getLineCount() <= mMaxCollapsedLines) {
-            return;
-        }
-        //以下是行数大于最大行数的
-        //保存textview的高度
-        mTextHeightWithMaxLines = getRealTextViewHeight(mTv);
-        if (mCollapsed) {//如果是收起的
-            mTv.setMaxLines(mMaxCollapsedLines);
-        }
-        mExpandTv.setVisibility(View.VISIBLE);
-        //计算宽高
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mCollapsed) {
-            //获取Textview距离视图底部的高度
-            mTv.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMarginBetweenTxtAndBottom = getHeight() - mTv.getHeight();
-                }
-            });
-            // 保存收起状态的高度
-            mCollapsedHeight = getMeasuredHeight();
+        if (!isShowCollapsed) {
+            //1.没有展开按钮
+            mExpandTv.setVisibility(GONE);
+            mTv.setMaxLines(Integer.MAX_VALUE);
+            //计算宽高
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            //1.没有展开按钮
+            mExpandTv.setVisibility(GONE);
+            mTv.setMaxLines(Integer.MAX_VALUE);
+            //计算宽高
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            //如果行数小于等于收起状态显示最大行数,则return
+            if (mTv.getLineCount() <= mMaxCollapsedLines) {
+                return;
+            }
+            //以下是行数大于最大行数的
+            //保存textview的高度
+            mTextHeightWithMaxLines = getRealTextViewHeight(mTv);
+            if (mCollapsed) {//如果是收起的
+                mTv.setMaxLines(mMaxCollapsedLines);
+            }
+            mExpandTv.setVisibility(View.VISIBLE);
+            //计算宽高
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            if (mCollapsed) {
+                //获取Textview距离视图底部的高度
+                mTv.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMarginBetweenTxtAndBottom = getHeight() - mTv.getHeight();
+                    }
+                });
+                // 保存收起状态的高度
+                mCollapsedHeight = getMeasuredHeight();
+            }
         }
     }
 

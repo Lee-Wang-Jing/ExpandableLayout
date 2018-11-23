@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -101,6 +100,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         collapsedText = typedArray.getString(R.styleable.ExpandableTextView_collapsedText);
         expandText = typedArray.getString(R.styleable.ExpandableTextView_expandText);
         contentClick = typedArray.getBoolean(R.styleable.ExpandableTextView_contentClick, false);
+        mCollapsed = typedArray.getBoolean(R.styleable.ExpandableTextView_contentClick, true);
         typedArray.recycle();
         if (TextUtils.isEmpty(collapsedText)) {
             collapsedText = DEFAULT_COLLAPSEDTEXT;
@@ -255,6 +255,14 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
 
     public void setOnExpandStateChangeListener(@Nullable OnExpandStateChangeListener listener) {
         mListener = listener;
+    }
+
+    public TextView getmTv() {
+        return mTv;
+    }
+
+    public TextView getmExpandTv() {
+        return mExpandTv;
     }
 
     /**

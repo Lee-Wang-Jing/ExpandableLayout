@@ -12,15 +12,23 @@
 # Dependencies
 * Gradle
 ```groovy
-compile 'com.wangjing:expandablelayout:1.0.4'
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+	
+```groovy
+implementation 'com.github.Lee-Wang-Jing:ExpandableLayout:1.0.5'
 ```
 * Maven
 ```xml
 <dependency>
-  <groupId>com.wangjing</groupId>
-  <artifactId>expandablelayout</artifactId>
-  <version>1.0.2</version>
-  <type>pom</type>
+	    <groupId>com.github.Lee-Wang-Jing</groupId>
+	    <artifactId>ExpandableLayout</artifactId>
+	    <version>Tag</version>
 </dependency>
 ```
 
@@ -120,6 +128,8 @@ gif有一些失真，且网页加载速度慢，建议下载demo运行后查看�
          <attr name="expandDrawable" format="reference" />
          <!--内容文字区域点击是否可以展开收起，默认false，不可以-->
          <attr name="contentClick" format="boolean" />
+         <!--展开还是收起状态，默认收起 true-->
+         <attr name="collapsed" format="boolean" />
     </declare-styleable>
 
 </resources>

@@ -147,6 +147,16 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         }
     }
 
+    private int getTargetHeight() {
+        if (mCollapsed) {
+            return mCollapsedHeight;
+        } else {
+            return getHeight() +
+                    mTextHeightWithMaxLines - mTv.getHeight();
+        }
+    }
+
+
     @Override
     public void onClick(View view) {
         if (mExpandTv.getVisibility() != VISIBLE) {
@@ -163,12 +173,7 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
         //标记动画正在进行
         mAnimating = true;
         Animation animation;
-        if (mCollapsed) {
-            animation = new ExpandCollapseAnimation(this, getHeight(), mCollapsedHeight);
-        } else {
-            animation = new ExpandCollapseAnimation(this, getHeight(), getHeight() +
-                    mTextHeightWithMaxLines - mTv.getHeight());
-        }
+        animation = new ExpandCollapseAnimation(this, getHeight(), getTargetHeight());
         animation.setFillAfter(true);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -193,7 +198,6 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
             public void onAnimationRepeat(Animation animation) {
             }
         });
-
         clearAnimation();
         startAnimation(animation);
     }
@@ -346,5 +350,14 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
 
     private static boolean isPostHoneycomb() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAnimating = false;
+        clearAnimation();
+        getLayoutParams().height = getTargetHeight();
+        requestLayout();
     }
 }

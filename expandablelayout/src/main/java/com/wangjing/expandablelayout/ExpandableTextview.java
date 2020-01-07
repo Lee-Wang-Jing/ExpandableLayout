@@ -355,9 +355,14 @@ public class ExpandableTextview extends LinearLayout implements View.OnClickList
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mAnimating = false;
-        clearAnimation();
-        getLayoutParams().height = getTargetHeight();
-        requestLayout();
+        if (mAnimating) {
+            mAnimating = false;
+            if (mCollapsed) {
+                mTv.setMaxHeight(mCollapsedHeight - mMarginBetweenTxtAndBottom);
+                getLayoutParams().height = mCollapsedHeight;
+                mTv.setAlpha(1.0f);
+                requestLayout();
+            }
+        }
     }
 }
